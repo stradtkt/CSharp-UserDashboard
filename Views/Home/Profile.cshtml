@@ -1,0 +1,48 @@
+@model UserDashboard.Models.Message
+
+
+<div class="row">
+    <div class="col-md-6 text-center">
+        <h1>@ViewBag.user.first_name @ViewBag.user.last_name</h1>
+        <hr>
+        <p class="lead">@ViewBag.user.email</p>
+        <hr>
+        <p>@ViewBag.user.created_at</p>
+    </div>
+    <div class="col-md-6 text-center">
+        <h3>Post A Message To @ViewBag.user.first_name</h3>
+        <form action="process_message" method="POST">
+            <div class="form-group">
+                <textarea name="msg" cols="30" rows="10" class="form-control"></textarea>
+            </div>
+            <input type="submit" value="Post Message" class="btn btn-round btn-success">
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    @foreach (var m in ViewBag.messages)
+    {
+        <div class="col-md-10 offset-1">
+            <div class="card text-center">
+                <div class="card-header mt-2">
+                    @m.Users.first_name @m.Users.last_name
+                </div>
+                <div class="card-body">
+                    <p class="card-text">@m.message</p>
+                </div>
+                <div class="card-footer text-muted mb-2">
+                    <h6>Add Comment</h6>
+                    <form action="process_comment" method="POST">
+                        <div class="form-group">
+                            <textarea name="comm" cols="30" rows="10" class="form-control"></textarea>
+                        </div>
+                        <input type="submit" value="Post Comment" class="btn btn-round btn-default">
+                    </form>
+                    <p class="lead">@m.Comments.Users.first_name @m.Comments.Users.last_name</p>
+                    <p>@m.Comments.comment</p>
+                </div>
+            </div>
+        </div>   
+    }
+</div>
