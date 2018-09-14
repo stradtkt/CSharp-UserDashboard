@@ -135,11 +135,62 @@ namespace UserDashboard.Controllers
                 List<Message> messages = _uContext.messages
                     .Include(u => u.Users)
                     .Include(c => c.Comments)
+                    .ThenInclude(c => c.Users)
                     .ToList();
                 ViewBag.messages = messages;
                 ViewBag.user = user;
             }
             return View();
+        }
+
+        [HttpPost("process_message")]
+        public IActionResult ProcessMessage(Message msg)
+        {
+            if(ActiveUser == null)
+            {
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                if(ModelState.IsValid)
+                {
+                    Message mess = new Message
+                    {
+                        user_id = ActiveUser.user_id,
+                        message = msg.message
+                    };
+                    _uContext.messages.Add(mess);
+                    _uContext.SaveChanges();
+                    return RedirectToAction("Dashboard");
+                }
+            }
+                List<Message> messages = _uContext.messages
+                    .Include(u => u.Users)
+                    .Include(c => c.Comments)
+                    .ThenInclude(c => c.Users)
+                    .ToList();
+                ViewBag.messages = messages;
+            return RedirectToAction("Dashboard");
+        }
+        [HttpPost("process_comment")]
+        public IActionResult ProcessComment(string comm, int message_id)
+        {
+            if(ActiveUser == null)
+            {
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                Comment com = new Comment
+                {
+                    comment = comm,
+                    message_id = message_id,
+                    user_id = ActiveUser.user_id
+                };
+                _uContext.Add(com);
+                _uContext.SaveChanges();
+                return RedirectToAction("Dashboard");
+            }
         }
         [HttpGet("Edit/{user_id}")]
         public IActionResult Edit(int user_id)
