@@ -1,5 +1,7 @@
 @model UserDashboard.Models.Message
-
+@{
+    ViewData["Title"] = "Profile";
+}
 
 <div class="row">
     <div class="col-md-6 text-center">
@@ -32,7 +34,7 @@
                     <p class="card-text">@m.message</p>
                 </div>
                 <div class="card-footer text-muted mb-2">
-                        <a href="/comments/@m.message_id" class="btn btn-success btn-round">Comments: @ViewBag.comments.Count</a>
+                        <a href="/comments/@m.message_id" class="btn btn-success btn-round">Comments: @m.Comments.Count</a>
                         @if(ViewBag.active.user_id == m.Users.user_id)
                         {
                             <form action="delete_message/{message_id}" method="POST">

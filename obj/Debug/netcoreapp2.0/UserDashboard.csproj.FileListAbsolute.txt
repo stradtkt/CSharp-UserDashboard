@@ -8,4 +8,4 @@ E:\csharp\KevinStradtman\UserDashboard\obj\Debug\netcoreapp2.0\UserDashboard.Ass
 E:\csharp\KevinStradtman\UserDashboard\obj\Debug\netcoreapp2.0\UserDashboard.AssemblyInfo.cs
 E:\csharp\KevinStradtman\UserDashboard\obj\Debug\netcoreapp2.0\UserDashboard.dll
 E:\csharp\KevinStradtman\UserDashboard\obj\Debug\netcoreapp2.0\UserDashboard.pdb
-E:\csharp\KevinStradtman\UserDashboard\obj\Debug\netcoreapp2.0\UserDashboard.csprojAssemblyReference.cache
+E:\csharp\KevinStradtman\UserDashboard\obj\Debug\netcoreapp2.0\UserDashboard.csprojResolveAssemblyReference.cache

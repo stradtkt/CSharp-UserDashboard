@@ -144,10 +144,12 @@ namespace UserDashboard.Controllers
                     .Include(u => u.Users)
                     .Include(c => c.Comments)
                     .ThenInclude(c => c.Users)
+                    .ThenInclude(c => c.Messages)
                     .ToList();
                 List<Comment> comments = _uContext.comments
                     .Include(u => u.Users)
                     .Include(m => m.Messages)
+                    .ThenInclude(m => m.Users)
                     .ToList();
                 ViewBag.active = ActiveUser;
                 ViewBag.comments = comments;
@@ -204,6 +206,44 @@ namespace UserDashboard.Controllers
                 _uContext.Add(com);
                 _uContext.SaveChanges();
                 return RedirectToAction("Dashboard");
+            }
+        }
+        [HttpGet("AddUser")]
+        public IActionResult AddUser()
+        {
+           return View();
+        }
+          [HttpPost("ProcessUser")]
+        public IActionResult ProcessUser(AddUser user)
+        {
+            User CheckEmail = _uContext.users
+                .Where(u => u.email == user.email)
+                .SingleOrDefault();
+
+            if(CheckEmail != null)
+            {
+                ViewBag.errors = "That email already exists";
+                return RedirectToAction("Register");
+            }
+            if(ModelState.IsValid)
+            {
+                PasswordHasher<AddUser> Hasher = new PasswordHasher<AddUser>();
+                User newUser = new User
+                {
+                    user_id = user.user_id,
+                    first_name = user.first_name,
+                    last_name = user.last_name,
+                    email = user.email,
+                    password = Hasher.HashPassword(user, user.password)
+                  };
+                _uContext.Add(newUser);
+                _uContext.SaveChanges();
+                ViewBag.success = "Successfully Added";
+                return RedirectToAction("Dashboard");
+            }
+            else
+            {
+                return View("Dashboard");
             }
         }
         [HttpGet("Edit/{user_id}")]

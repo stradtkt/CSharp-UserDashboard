@@ -64,4 +64,30 @@ namespace UserDashboard.Models
 
         public string password {get;set;}
     }
+    public class AddUser : BaseEntity
+    {
+        [Key]
+        public int user_id {get;set;}
+        [Required(ErrorMessage="First Name is required")]
+        [MinLength(2, ErrorMessage="First Name has a min length of 2")]
+        [MaxLength(40, ErrorMessage="First Name has a max length of 40")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage="First Name must only contain letters")]
+        public string first_name {get;set;}
+        [Required(ErrorMessage="Last Name is required")]
+        [MinLength(2, ErrorMessage="Last Name has a min length of 2")]
+        [MaxLength(40, ErrorMessage="Last Name has a max length of 40")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage="Last Name must only contain letters")]
+        public string last_name {get;set;}
+        [EmailAddress(ErrorMessage="This field is of type email")]
+        [Required(ErrorMessage="Email is required")]
+        public string email {get;set;}
+        [Required(ErrorMessage="Password is required")]
+        [MinLength(8, ErrorMessage="Password has a min length of 8")]
+        [DataType(DataType.Password)]
+        public string password {get;set;}
+        [Required(ErrorMessage="Confirm Password is required")]
+        [DataType(DataType.Password)]
+        [Compare("password")]
+        public string confirm {get;set;}
+    }
 }

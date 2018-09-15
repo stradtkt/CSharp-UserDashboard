@@ -1,0 +1,58 @@
+@model UserDashboard.Models.AddUser
+@{
+    ViewData["Title"] = "Add User";
+}
+<div class="row">
+    <div class="col-md-10 offset-1">
+        <div class="jumbotron">
+            <h1 class="text-center">@ViewData["Title"]</h1>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-10 offset-1">
+        <form asp-action="ProcessUser" asp-controller="Home" method="POST">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <div class="bg-danger">
+                            <span asp-validation-for="first_name"></span>
+                        </div>
+                        <br>
+                        <input asp-for="first_name" class="form-control" placeholder="First Name">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div class="bg-danger">
+                            <span asp-validation-for="last_name"></span>
+                        </div>
+                        <br>
+                        <input asp-for="last_name" class="form-control" placeholder="Last Name">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <div class="bg-danger">
+                            <span asp-validation-for="email"></span>
+                        </div>
+                        <br>
+                        <input asp-for="email" class="form-control" placeholder="Email">  
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="bg-danger">
+                            <span asp-validation-for="password"></span>
+                        </div>
+                        <br>
+                        <input asp-for="password" class="form-control" placeholder="Password">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="bg-danger">
+                            <span asp-validation-for="confirm"></span>
+                        </div>
+                        <br>
+                        <input asp-for="confirm" class="form-control" placeholder="Confirm Password">
+                    </div>
+                </div>
+                <input type="submit" value="Add User" class="btn btn-success btn-round">
+            </form>
+        </div>
+    </div>
+</div>
