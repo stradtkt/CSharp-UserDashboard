@@ -13,9 +13,10 @@ namespace UserDashboard.Models
         public string email {get;set;}
         public string password {get;set;}
         public List<Message> Messages {get;set;}
-
+        public List<Comment> Comments {get;set;}
         public User()
         {
+            Comments = new List<Comment>();
             Messages = new List<Message>();
             created_at = DateTime.Now;
             updated_at = DateTime.Now;

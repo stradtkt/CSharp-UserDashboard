@@ -115,8 +115,13 @@ namespace UserDashboard.Controllers
             }
             else
             {
-                List<User> users = _uContext.users.OrderByDescending(d => d.created_at).ToList();
+                List<User> users = _uContext.users
+                    .Include(m => m.Messages)
+                    .ThenInclude(m => m.Users)
+                    .Include(c => c.Comments)
+                    .OrderByDescending(d => d.created_at).ToList();
                 ViewBag.users = users;
+                ViewBag.user = ActiveUser;
             }
             return View();
         }
@@ -130,6 +135,9 @@ namespace UserDashboard.Controllers
             else
             {
                 User user = _uContext.users
+                    .Include(m => m.Messages)
+                    .ThenInclude(m => m.Users)
+                    .Include(c => c.Comments)
                     .Where(u => u.user_id == user_id)
                     .SingleOrDefault();
                 List<Message> messages = _uContext.messages
@@ -137,6 +145,12 @@ namespace UserDashboard.Controllers
                     .Include(c => c.Comments)
                     .ThenInclude(c => c.Users)
                     .ToList();
+                List<Comment> comments = _uContext.comments
+                    .Include(u => u.Users)
+                    .Include(m => m.Messages)
+                    .ToList();
+                ViewBag.active = ActiveUser;
+                ViewBag.comments = comments;
                 ViewBag.messages = messages;
                 ViewBag.user = user;
             }
@@ -172,7 +186,7 @@ namespace UserDashboard.Controllers
                 ViewBag.messages = messages;
             return RedirectToAction("Dashboard");
         }
-        [HttpPost("process_comment")]
+        [HttpPost("ProcessComment")]
         public IActionResult ProcessComment(string comm, int message_id)
         {
             if(ActiveUser == null)
@@ -217,6 +231,62 @@ namespace UserDashboard.Controllers
             {
                 User toDelete = _uContext.users.Where(u => u.user_id == user_id).SingleOrDefault();
                 _uContext.users.Remove(toDelete);
+                _uContext.SaveChanges();
+                return RedirectToAction("Dashboard");
+            }
+        }
+        [HttpGet("comments/{message_id}")]
+        public IActionResult Comments(int message_id)
+        {
+            if(ActiveUser == null)
+            {
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                Message message = _uContext.messages
+                    .Include(u => u.Users)
+                    .Include(c => c.Comments)
+                    .ThenInclude(c => c.Users)
+                    .Where(m => m.message_id == message_id)
+                    .SingleOrDefault();
+                List<Comment> comments = _uContext.comments
+                    .Include(u => u.Users)
+                    .Include(m => m.Messages)
+                    .ThenInclude(c => c.Comments)
+                    .ToList();
+                ViewBag.user = ActiveUser;
+                ViewBag.comments = comments;
+                ViewBag.message = message;
+                return View();
+            }
+        }
+        [HttpPost("delete_message/{message_id}")]
+        public IActionResult DeleteMessage(int message_id)
+        {
+            if(ActiveUser == null)
+            {
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                Message toDelete = _uContext.messages.Where(m => m.message_id == message_id).SingleOrDefault();
+                _uContext.messages.Remove(toDelete);
+                _uContext.SaveChanges();
+                return RedirectToAction("Dashboard");
+            }
+        }
+        [HttpPost("delete_comment/{comment_id}")]
+        public IActionResult DeleteComment(int comment_id)
+        {
+            if(ActiveUser == null)
+            {
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                Comment toDelete = _uContext.comments.Where(c => c.comment_id == comment_id).SingleOrDefault();
+                _uContext.comments.Remove(toDelete);
                 _uContext.SaveChanges();
                 return RedirectToAction("Dashboard");
             }

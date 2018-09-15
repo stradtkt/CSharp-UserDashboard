@@ -11,9 +11,9 @@
     </div>
     <div class="col-md-6 text-center">
         <h3>Post A Message To @ViewBag.user.first_name</h3>
-        <form action="process_message" method="POST">
+        <form asp-action="ProcessMessage" asp-controller="Home" method="POST">
             <div class="form-group">
-                <textarea name="msg" cols="30" rows="10" class="form-control"></textarea>
+                <textarea asp-for="message" cols="30" rows="10" class="form-control"></textarea>
             </div>
             <input type="submit" value="Post Message" class="btn btn-round btn-success">
         </form>
@@ -21,7 +21,7 @@
 </div>
 
 <div class="row">
-    @foreach (var m in ViewBag.messages)
+    @foreach (var m in ViewBag.user.Messages)
     {
         <div class="col-md-10 offset-1">
             <div class="card text-center">
@@ -32,15 +32,18 @@
                     <p class="card-text">@m.message</p>
                 </div>
                 <div class="card-footer text-muted mb-2">
-                    <h6>Add Comment</h6>
-                    <form action="process_comment" method="POST">
-                        <div class="form-group">
-                            <textarea name="comm" cols="30" rows="10" class="form-control"></textarea>
-                        </div>
-                        <input type="submit" value="Post Comment" class="btn btn-round btn-default">
-                    </form>
-                    <p class="lead">@m.Comments.Users.first_name @m.Comments.Users.last_name</p>
-                    <p>@m.Comments.comment</p>
+                        <a href="/comments/@m.message_id" class="btn btn-success btn-round">Comments: @ViewBag.comments.Count</a>
+                        @if(ViewBag.active.user_id == m.Users.user_id)
+                        {
+                            <form action="delete_message/{message_id}" method="POST">
+                                <input type="hidden" name="message_id" value="@m.message_id">
+                                <input type="submit" value="Delete" class="btn btn-round btn-danger">
+                            </form>
+                        }
+                        else
+                        {
+                            <p></p>
+                        }
                 </div>
             </div>
         </div>   
