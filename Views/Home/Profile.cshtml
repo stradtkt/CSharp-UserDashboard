@@ -5,20 +5,26 @@
 
 <div class="row">
     <div class="col-md-6 text-center">
+        <div class="card m-3 mt-5 mb-5">
         <h1>@ViewBag.user.first_name @ViewBag.user.last_name</h1>
         <hr>
         <p class="lead">@ViewBag.user.email</p>
         <hr>
         <p>@ViewBag.user.created_at</p>
     </div>
+    </div>
     <div class="col-md-6 text-center">
-        <h3>Post A Message To @ViewBag.user.first_name</h3>
+        <div class="card p-3 mt-5 mb-5">
+            <div class="card-header">
+                <p class="lead text-center">Post A Message</p>
+            </div>
         <form asp-action="ProcessMessage" asp-controller="Home" method="POST">
             <div class="form-group">
                 <textarea asp-for="message" cols="30" rows="10" class="form-control"></textarea>
             </div>
             <input type="submit" value="Post Message" class="btn btn-round btn-success">
         </form>
+        </div>
     </div>
 </div>
 
@@ -37,7 +43,7 @@
                         <a href="/comments/@m.message_id" class="btn btn-success btn-round">Comments: @m.Comments.Count</a>
                         @if(ViewBag.active.user_id == m.Users.user_id)
                         {
-                            <form action="delete_message/{message_id}" method="POST">
+                            <form action="/delete_message/{message_id}" method="POST">
                                 <input type="hidden" name="message_id" value="@m.message_id">
                                 <input type="submit" value="Delete" class="btn btn-round btn-danger">
                             </form>

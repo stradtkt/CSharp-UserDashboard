@@ -1,0 +1,30 @@
+@{
+    ViewData["Title"] = "Edit User";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="bg-success">
+            <p class="text-center text-white">@ViewBag.success</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 offset-3">
+        <div class="card p-5 mt-5 mb-5">
+            <h1 class="text-center">@ViewData["Title"]</h1>
+            <form action="/@ViewBag.user.user_id/ProcessEditUser" method="POST">
+                <div class="form-group">
+                    <input type="text" name="first_name" class="form-control" value="@ViewBag.user.first_name">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="last_name" class="form-control" value="@ViewBag.user.last_name">
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" class="form-control" value="@ViewBag.user.email">
+                </div>
+                <input type="submit" value="Update User" class="btn btn-success btn-round">
+            </form>
+        </div>
+    </div>
+</div>

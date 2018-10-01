@@ -142,6 +142,8 @@ namespace UserDashboard.Controllers
                     .SingleOrDefault();
                 List<Message> messages = _uContext.messages
                     .Include(u => u.Users)
+                    .ThenInclude(u => u.Messages)
+                    .ThenInclude(u => u.Comments)
                     .Include(c => c.Comments)
                     .ThenInclude(c => c.Users)
                     .ThenInclude(c => c.Messages)
@@ -246,21 +248,9 @@ namespace UserDashboard.Controllers
                 return View("Dashboard");
             }
         }
-        [HttpGet("Edit/{user_id}")]
-        public IActionResult Edit(int user_id)
-        {
-            if(ActiveUser == null)
-            {
-                return RedirectToAction("Login");
-            }
-            else
-            {
-                User user = _uContext.users.Where(u => u.user_id == user_id).SingleOrDefault();
-                ViewBag.user = user;
-            }
-            return View();
-        }
-        [HttpPost("DeleteUser/{user_id}")]
+
+
+        [HttpGet("DeleteUser/{user_id}")]
         public IActionResult DeleteUser(int user_id)
         {
             if(ActiveUser == null)
@@ -311,6 +301,8 @@ namespace UserDashboard.Controllers
             else
             {
                 Message toDelete = _uContext.messages.Where(m => m.message_id == message_id).SingleOrDefault();
+                List<Comment> comments = _uContext.comments.Include(m => m.Messages).Where(m => m.message_id == message_id).ToList();
+                _uContext.comments.RemoveRange(comments);
                 _uContext.messages.Remove(toDelete);
                 _uContext.SaveChanges();
                 return RedirectToAction("Dashboard");
@@ -330,6 +322,34 @@ namespace UserDashboard.Controllers
                 _uContext.SaveChanges();
                 return RedirectToAction("Dashboard");
             }
+        }
+
+        [HttpGet("EditUser/{user_id}")]
+        public IActionResult EditUser(int user_id)
+        {
+            if(ActiveUser == null) 
+            {
+                return RedirectToAction("Login");
+            }
+            User user = _uContext.users.Where(u => u.user_id == user_id).SingleOrDefault();
+            ViewBag.success = TempData["success"];
+            ViewBag.user = user;
+            return View();
+        }
+        [Route("{user_id}/ProcessEditUser")]
+        public IActionResult ProcessEditUser(int user_id, string first_name, string last_name, string email)
+        {
+            if(ActiveUser == null)
+            {
+                return RedirectToAction("Login");
+            }
+            User user = _uContext.users.Where(u => u.user_id == user_id).SingleOrDefault();
+            user.first_name = first_name;
+            user.last_name = last_name;
+            user.email = email;
+            _uContext.SaveChanges();
+            TempData["success"] = "User successfully edited";
+            return Redirect("/EditUser/"+ user_id);
         }
         public IActionResult Error()
         {
